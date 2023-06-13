@@ -1,35 +1,63 @@
-<script setup>
+<script>
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+
+
+export default {
+  components: {
+
+  },
+  data() {
+    return {
+
+      
+
+
+
+
+    }
+  },
+  methods: {
+   
+
+    // 生命週期
+  },
+  mounted() {
+    // this.fn();
+
+
+  }
+}
+
+
+
+
 </script>
+
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" /> -->
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <!-- <div class="wrapper">
+      <HelloWorld msg="You did it!" /> -->
 
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <!-- <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/about">About</RouterLink> -->
       </nav>
-    </div>
+    <!-- </div> -->
   </header>
 
   <RouterView />
 </template>
 
 <style scoped>
-header {
+/* header {
   line-height: 1.5;
   max-height: 100vh;
-}
+} */
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+
 
 nav {
   width: 100%;
