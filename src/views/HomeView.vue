@@ -25,8 +25,8 @@ export default {
       istitleBtn: false,
       isDateBtn: false,
       methodSearch: "Str",
-      isApproval: false //用於偵測是否開放修改
-
+      isApproval: false, //用於偵測是否開放修改
+      checkedItems: [] // 用於儲存 checkbox 的選中狀態
 
 
 
@@ -315,7 +315,7 @@ export default {
       console.log(surveyid);
       sessionStorage.setItem("surveyid", JSON.stringify(surveyid));
       //   this.submitID=surveyid;
-      this.$emit("emitPush")
+      // this.$emit("emitPush")
 
     },
     goStaticPure() {
@@ -329,8 +329,19 @@ export default {
     // },
     goToPage(index) {
       console.log(index);//回傳現在頁數
+      let LastPage = JSON.parse(sessionStorage.getItem('currentPage'));
+      
+      if(index=!LastPage){
+        this.checkedItems=[]; //換頁清空checkbox
+      }
+      // let deleteList = JSON.parse(sessionStorage.getItem('pageDeleteClick'))
+      // if()
+      // this.checkedItems=deleteList.isClicked;
+
       // 第一頁為0
       this.pageinput = index;//提供頁數
+      console.log(index)
+     
       this.isClickPage = !this.isClickPage;
 
       if (index >= 0 && index < this.totalPages) {
@@ -476,7 +487,7 @@ export default {
         })
 
     },
-    goStatic(surveyId , startDay) {
+    goStatic(surveyId, startDay) {
       // this.submitSurvey(surveyid);
       sessionStorage.setItem("surveyid", JSON.stringify(surveyId));
       sessionStorage.setItem("surveyStartDay", JSON.stringify(startDay));
@@ -488,7 +499,7 @@ export default {
     },
     alertMsg() {
       alert('NOT YET')
-    },getToday() {
+    }, getToday() {
       const today = new Date();
       const year = today.getFullYear();
       const month = String(today.getMonth() + 1).padStart(2, '0');
@@ -502,6 +513,33 @@ export default {
         const temp = this.startDate;
         this.startDate = this.endDate;
         this.endDate = temp;
+      }
+    }, handleCheckboxChange(index) {
+
+      
+      
+      let PageNow = JSON.parse(sessionStorage.getItem('currentPage'));
+      let pageableDelte = [];
+
+      if (this.checkedItems[index]) {
+        // checkbox 被選中
+        let pageDropInfo = {
+          pageInex: PageNow,
+          isClicked: this.checkedItems
+        }
+        console.log('Checkbox with index', index, 'is checked.');
+        pageableDelte.push(pageDropInfo);
+        sessionStorage.setItem("pageDeleteClick", JSON.stringify(pageDropInfo));
+        
+      } else {
+        // checkbox 取消選中
+        let deleteList = JSON.parse(sessionStorage.getItem('pageDeleteClick'))
+
+        console.log('Checkbox with index', index, 'is unchecked.');
+        // 使用 filter 方法創建新的列表，只包含尚未取消選中的 checkbox 選項
+        deleteList = deleteList.filter((item, idx) => this.checkedItems[idx]);
+        sessionStorage.setItem("pageDeleteClick", JSON.stringify(deleteList));
+        
       }
     }
 
@@ -521,6 +559,7 @@ export default {
 
 
     //======================
+    sessionStorage.setItem("currentPage", JSON.stringify(this.pageinput));
 
     // const year = today.getFullYear();
     // const month = String(today.getMonth() + 1).padStart(2, '0');
@@ -564,14 +603,14 @@ export default {
         <div class="time">
 
           <label for="dateFrom">開始/結束</label>
-          
-          <input type="date" class="form-control" id="dateFrom" name="date" v-model="startDate"  @click="cleanInputDateStart()">
-          <input type="date" class="form-control" id="dateTo" name="date" v-model="endDate" 
-            @click="cleanInputDateEnd()">
+
+          <input type="date" class="form-control" id="dateFrom" name="date" v-model="startDate"
+            @click="cleanInputDateStart()">
+          <input type="date" class="form-control" id="dateTo" name="date" v-model="endDate" @click="cleanInputDateEnd()">
 
 
         </div>
-        
+
       </div>
       <div class="start-ended">
         <button v-if="this.titleInput === null && this.startDate === null && this.endDate === null" type="button"
@@ -647,9 +686,11 @@ export default {
         <tbody>
           <tr v-for="(item, index) in arrList" :key="index">
             <th scope="row">{{ index + 1 }}</th>
-            <td><input type="checkbox" name="" id="" :disabled="item.startDay < getToday()"></td>
+            <td><input type="checkbox" name="" id="" :disabled="item.startDay <= getToday()" v-model="checkedItems[index]"
+                @change="handleCheckboxChange(index)"></td>
             <!-- //href="/Add" -->
-            <td><a :href="item.startDay <= getToday() ? null : '/Add'" @click="submitSurvey(item.surveyId)">{{ item.surveyId }}</a></td>
+            <td><a :href="item.startDay <= getToday() ? null : '/Add'" @click="submitSurvey(item.surveyId)">{{
+              item.surveyId }}</a></td>
             <td>{{ item.title }}</td>
             <!-- <td v-if="item.startDay = thisIsToday && thisIsToday >= item.endDay"> 開放中 </td> -->
             <td>
@@ -657,7 +698,8 @@ export default {
             </td>
             <td>{{ item.startDay }}</td>
             <td>{{ item.endDay }}</td>
-            <td><button v-if="item.endDay<getToday()" @click="goStatic(item.surveyId,item.startDay)">Detail</button></td>
+            <td><button v-if="item.endDay < getToday()" @click="goStatic(item.surveyId, item.startDay)">Detail</button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -765,21 +807,24 @@ input {
 
 
 }
-button{
-    background: rgb(96, 88, 65);
-    border: 2px solid rgb(235, 234, 217);
-    border-radius: 5px;
-    color: rgb(247, 246, 235);
-    transition: 0.8s;
+
+button {
+  background: rgb(96, 88, 65);
+  border: 2px solid rgb(235, 234, 217);
+  border-radius: 5px;
+  color: rgb(247, 246, 235);
+  transition: 0.8s;
 }
-button:hover{
-    background: rgb(45, 44, 42);
-    border: 2px solid rgb(231, 229, 187);
-    border-radius: 5px;
-    color: rgb(184, 182, 159);
+
+button:hover {
+  background: rgb(45, 44, 42);
+  border: 2px solid rgb(231, 229, 187);
+  border-radius: 5px;
+  color: rgb(184, 182, 159);
 
 }
-button:active{
-   scale:0.6;
+
+button:active {
+  scale: 0.6;
 }
 </style>

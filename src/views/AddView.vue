@@ -146,7 +146,7 @@ export default {
 
 
 
-      
+
     },
     // getEmitAction(){
     //   console.log("触发了 emitPush 事件");
@@ -199,58 +199,74 @@ export default {
         this.startDate = this.endDate;
         this.endDate = temp;
       }
-    }
+    },
+    alertNav() {
+
+      if (confirm("你送出儲存了嗎?")) {
+        // 使用者點擊了"確定"
+        this.$router.push('/subQuestion');
+        // this.$route.push('/subQuestion');
+
+
+      } else {
+        // 使用者點擊了"取消"
+        // 跳出拒絕動作或執行其他操作
+
+
+      }
+    }}
+
 
 
 
     // 生命週期
-  },
-  created() {
-    setTimeout(() => {
-      if (JSON.parse(sessionStorage.getItem('surveyid')) !== null) {
-        this.getSurveyIDInfo();
-        this.changeModi();
+    ,
+    created() {
+      setTimeout(() => {
+        if (JSON.parse(sessionStorage.getItem('surveyid')) !== null) {
+          this.getSurveyIDInfo();
+          this.changeModi();
 
-      }
-      let surveyStartDay = JSON.parse(sessionStorage.getItem('surveyStartDay'));
-      let getToday = this.getToday();
-      if (surveyStartDay < getToday) {
-        this.isDisable = true;
-        if (this.isDisable = true) {
-          this.isExist = false;
-          this.isModi = false;
         }
-      }
+        let surveyStartDay = JSON.parse(sessionStorage.getItem('surveyStartDay'));
+        let getToday = this.getToday();
+        if (surveyStartDay < getToday) {
+          this.isDisable = true;
+          if (this.isDisable = true) {
+            this.isExist = false;
+            this.isModi = false;
+          }
+        }
 
-    }, 300);
-
-
-  },
-
-  mounted() {
-    // this.fn();
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-
-    const endDate = new Date(today.getTime());
-    endDate.setDate(endDate.getDate() + 7);
-    const endDateYear = endDate.getFullYear();
-    const endDateMonth = String(endDate.getMonth() + 1).padStart(2, '0');
-    const endDateDay = String(endDate.getDate()).padStart(2, '0');
-
-    this.startDate = `${year}-${month}-${day}`;
-    this.endDate = `${endDateYear}-${endDateMonth}-${endDateDay}`;
+      }, 300);
 
 
+    },
+
+    mounted() {
+      // this.fn();
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+
+      const endDate = new Date(today.getTime());
+      endDate.setDate(endDate.getDate() + 7);
+      const endDateYear = endDate.getFullYear();
+      const endDateMonth = String(endDate.getMonth() + 1).padStart(2, '0');
+      const endDateDay = String(endDate.getDate()).padStart(2, '0');
+
+      this.startDate = `${year}-${month}-${day}`;
+      this.endDate = `${endDateYear}-${endDateMonth}-${endDateDay}`;
 
 
 
 
 
+
+
+    }
   }
-}
 
 
 
@@ -265,8 +281,9 @@ export default {
       <li class="nav-item">
         <a class="nav-link active" aria-current="page" href="/Add">問卷</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/subQuestion">題目問項</a>
+    
+      <li class="nav-item"> 
+        <a class="nav-link"  @click="alertNav()">題目問項</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/feedback">填寫回饋</a>
@@ -402,4 +419,5 @@ button:active {
   display: flex;
   justify-content: center;
   align-items: center;
-}</style>
+}
+</style>

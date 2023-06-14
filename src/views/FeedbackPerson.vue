@@ -29,7 +29,7 @@ export default {
             selectedOptions: true,  // 存儲已勾選的選項
             finishSuevey: [],
             checkOptionList: [],
-          
+
 
 
 
@@ -128,11 +128,17 @@ export default {
 
 
         },
-         getPersonInfo() {
-            this.getSelectionInfo();
+
+        getPersonInfo() {
+
+
+            // this.getSelectionInfo();
+
+
+
             let feedbackIndex = JSON.parse(sessionStorage.getItem('selectFeedbackItem'));
             let feedback = JSON.parse(sessionStorage.getItem('surveyFeedback'));
-            
+
 
             console.log(feedback)
             console.log(feedbackIndex)
@@ -157,19 +163,17 @@ export default {
 
             //將變成是哪一題+哪個選項+true/false
             //0 : Array(3)
-           
+
             // 0: {sub: '台南', isChecked: true}
-           
+
             // 1: {sub: '高雄', isChecked: false}
-          
+
             // 2: {sub: '台北', isChecked: true}
             // 
             // 
 
             let surveylayout = JSON.parse(sessionStorage.getItem('BodyArr'));
             console.log(surveylayout);
-
-
 
 
 
@@ -205,46 +209,23 @@ export default {
             }
 
             console.log(surveylayout);
-            this.finishSuevey=surveylayout;
-            sessionStorage.setItem("ensureSurvey", JSON.stringify(this.finishSuevey));//確認勾選
-
-
-            // for (let i = 0; i < surveylayout.length; i++) {
-
-            //     let selectionArr = surveylayout[i].selection;
-            //     for (let j = 0; j < newIsSelect.length; j++) {
-            //         let selectionArrBoolean = newIsSelect[j]; // 取出每筆的01布林
-            //       
-            //     }
+            this.finishSuevey = surveylayout;
+            sessionStorage.setItem("ensureSurvey", JSON.stringify(this.finishSuevey));
 
 
 
 
 
-            //     console.log(newSelection);
-            //     const optionsObject = selection.map((option, index) => {
-            //         return {
-            //             sub: option,
-            //             isChecked: newIsSelect[index] === '1'
-            //         };
-            //     });
-
-            // options.push(...optionsObject);
-            // let addItemArr = {
-            //     "surveyid": surveylayout[i].surveyid,
-            //     "title": surveylayout[i].title,
-            //     "selection": options,
-            //     "type": surveylayout[i].type,
-            //     "neccassary": surveylayout[i].neccassary,
-            //     "isDelete": false
-            // };
-
-            // newSelection.push(addItemArr);
-            // console.log(newSelection);
-            // this.finishSuevey = newSelection;
-            // console.log(this.finishSuevey);
 
 
+
+
+
+
+
+
+
+            // }
         }
     }
 
@@ -258,7 +239,7 @@ export default {
     // 生命週期
     , created() {
 
-
+       
 
         // if (JSON.parse(sessionStorage.getItem('addArr') !== null)){
         //     this.getsession();
@@ -266,19 +247,25 @@ export default {
     },
     mounted() {
 
+        setTimeout(() => {
+            this.getSurveyIDInfo();
+        }, 300);
+        setTimeout(() => {
+            this.getSelectionInfo();
+        }, 400);
+        setTimeout(() => {
+            this.getPersonInfo();
+        }, 500);
+
         // if (JSON.parse(sessionStorage.getItem('HeadArr')) === null) {
         //     this.getSurveyIDInfo()
         // }
-        setTimeout(() => {
-            this.getSurveyIDInfo;
-        }, 300);
-        setTimeout(() => {
-            this.getSelectionInfo;
-        }, 500);
+
+      
 
         // getSelectionInfo()
         // if (JSON.parse(sessionStorage.getItem('BodyArr')) === null) {
-           
+
         // }
 
     }
@@ -333,7 +320,7 @@ export default {
 
             <ul>
                 <li v-for="(item, index) in this.finishSuevey" :key="index" class="">
-                    <p class="text-primary" >題目:{{ item.title }}</p>
+                    <p class="text-primary">題目:{{ item.title }}</p>
                     <p class="text-primary">題型:【{{ item.type }}】</p>
                     <p class="text-danger">{{ item.neccassary }}</p>
                     <div class="flex">
@@ -396,21 +383,24 @@ label {
 input {
     margin: 5px;
 }
-button{
+
+button {
     background: rgb(96, 88, 65);
     border: 2px solid rgb(235, 234, 217);
     border-radius: 5px;
     color: rgb(247, 246, 235);
     transition: 0.8s;
 }
-button:hover{
+
+button:hover {
     background: rgb(45, 44, 42);
     border: 2px solid rgb(231, 229, 187);
     border-radius: 5px;
     color: rgb(184, 182, 159);
 
 }
-button:active{
-   scale:0.6;
+
+button:active {
+    scale: 0.6;
 }
 </style>
